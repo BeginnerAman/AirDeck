@@ -2,7 +2,18 @@
 
 Wireless Hardware Companion Bridge and Modular Controller Suite for Windows
 
+[![Latest Release](https://img.shields.io/github/v/release/BeginnerAman/AirDeck?label=Latest%20Release&color=blue)](https://github.com/BeginnerAman/AirDeck/releases/latest)
+[![Direct Download](https://img.shields.io/badge/Download-Windows%20x64%20(v3.0.0)-success)](https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/BeginnerAman/AirDeck/blob/main/LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20(64--bit)-lightgrey)](https://github.com/BeginnerAman/AirDeck)
+
 AirDeck Pro is an open-source, ultra-low-latency companion system that transforms any modern smartphone or tablet into a wireless hardware controller for Windows PCs and laptops. It operates without requiring any third-party mobile application from the Google Play Store or Apple App Store. The entire client interface runs directly inside your mobile browser as a responsive, installable Progressive Web App (PWA) communicating over local Wi-Fi or mobile hotspot.
+
+### Quick Downloads
+
+- Direct Portable Download: [AirDeck-v3.0.0-windows-x64.zip](https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip) (48.6 MB, Pre-compiled standalone bundle)
+- GitHub Releases Hub: [View All Releases and Assets](https://github.com/BeginnerAman/AirDeck/releases)
+- Latest Release Notes: [Release v3.0.0 Details](https://github.com/BeginnerAman/AirDeck/releases/tag/v3.0.0)
 
 ---
 
@@ -13,7 +24,7 @@ AirDeck Pro is an open-source, ultra-low-latency companion system that transform
 3. [Architecture and Design](#architecture-and-design)
 4. [Prerequisites and System Requirements](#prerequisites-and-system-requirements)
 5. [Installation and Getting Started](#installation-and-getting-started)
-   - [Method 1: Standalone Windows Installer (Recommended)](#method-1-standalone-windows-installer-recommended)
+   - [Method 1: Standalone Windows Portable Bundle (Recommended)](#method-1-standalone-windows-portable-bundle-recommended)
    - [Method 2: Running from Source Code](#method-2-running-from-source-code)
 6. [Pairing and Connection Walkthrough](#pairing-and-connection-walkthrough)
    - [Step 1: Start AirDeck on PC](#step-1-start-airdeck-on-pc)
@@ -154,18 +165,15 @@ flowchart TD
 
 ## Installation and Getting Started
 
-### Method 1: Standalone Windows Installer (Recommended)
+### Method 1: Standalone Windows Portable Bundle (Recommended)
 
 This method requires no Python setup and is suitable for all end users.
 
-1. Download the latest installer `AirDeck_Pro_Setup_v3.0.exe` from the Releases page.
-2. Run the installer.
-3. The installer will automatically:
-   - Install AirDeck to your local user directory.
-   - Create desktop and start menu shortcuts.
-   - Configure Windows Defender Firewall rules for TCP ports 8765 to 8775.
-   - Add an optional background autostart entry in the Windows registry.
-4. Launch AirDeck from the Start Menu or Desktop.
+1. Download the latest release package: [AirDeck-v3.0.0-windows-x64.zip](https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip) (or view all versions on the [Releases Page](https://github.com/BeginnerAman/AirDeck/releases)).
+2. Extract the downloaded zip file to any directory on your PC.
+3. Open the extracted folder and double-click `AirDeck.exe` (or `launch_airdeck.bat`).
+4. If Windows Defender Firewall shows a network access prompt, click "Allow access", or right-click `allow_firewall.bat` and run as Administrator.
+5. Scan the pairing QR code with your smartphone camera to connect immediately.
 
 ### Method 2: Running from Source Code
 
@@ -173,7 +181,7 @@ For developers who want to inspect or modify the code:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/AirDeck.git
+   git clone https://github.com/BeginnerAman/AirDeck.git
    cd AirDeck/companion_bridge
    ```
 
