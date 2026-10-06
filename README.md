@@ -4,6 +4,7 @@ Wireless Hardware Companion Bridge and Modular Controller Suite for Windows
 
 [![Latest Release](https://img.shields.io/github/v/release/BeginnerAman/AirDeck?label=Latest%20Release&color=blue)](https://github.com/BeginnerAman/AirDeck/releases/latest)
 [![Direct Download](https://img.shields.io/badge/Download-Windows%20x64%20(v3.0.0)-success)](https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip)
+[![Live Website](https://img.shields.io/badge/Website-Live%20Demo-purple)](https://beginneraman.github.io/AirDeck/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/BeginnerAman/AirDeck/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20(64--bit)-lightgrey)](https://github.com/BeginnerAman/AirDeck)
 
@@ -11,6 +12,7 @@ AirDeck Pro is an open-source, ultra-low-latency companion system that transform
 
 ### Quick Downloads
 
+- Live Product Website: [https://beginneraman.github.io/AirDeck/](https://beginneraman.github.io/AirDeck/) (Interactive Simulator and Overview)
 - Direct Portable Download: [AirDeck-v3.0.0-windows-x64.zip](https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip) (48.6 MB, Pre-compiled standalone bundle)
 - GitHub Releases Hub: [View All Releases and Assets](https://github.com/BeginnerAman/AirDeck/releases)
 - Latest Release Notes: [Release v3.0.0 Details](https://github.com/BeginnerAman/AirDeck/releases/tag/v3.0.0)
