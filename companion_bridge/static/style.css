@@ -1,0 +1,1428 @@
+/* ================================================================
+   AirDeck — AMOLED Dark Theme & GPU-Accelerated Touch Layout
+   ================================================================ */
+
+:root {
+  --bg:            #000000;
+  --surface:       rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --surface-active:rgba(255, 255, 255, 0.12);
+  --border:        rgba(255, 255, 255, 0.07);
+  --accent:        #6C63FF;
+  --accent-dim:    rgba(108, 99, 255, 0.15);
+  --accent-border: rgba(108, 99, 255, 0.35);
+  --text-1:        rgba(255, 255, 255, 0.94);
+  --text-2:        rgba(255, 255, 255, 0.60);
+  --text-3:        rgba(255, 255, 255, 0.30);
+  --green:         #22c55e;
+  --red:           #ef4444;
+  --radius:        14px;
+  --radius-sm:     8px;
+}
+
+/* ── Global Reset ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  touch-action: none;
+}
+
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* ── App Layout: Top Header, Multi-Decks Container, Bottom Tab Bar ── */
+#app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100dvh;
+  width: 100%;
+  gap: 4px;
+  padding: 4px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 3px);
+  position: relative;
+  overflow: hidden;
+}
+
+#decks-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.deck-pane {
+  display: none;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.deck-pane.active {
+  display: flex;
+  flex-direction: column;
+}
+
+#deck-trackpad.deck-pane.active {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 3px;
+}
+
+/* ================================================================
+   FLOATING FEEDBACK TOAST (Lucide SVG Enabled)
+   ================================================================ */
+.toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translate3d(-50%, -80px, 0);
+  background: rgba(18, 18, 22, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text-1);
+  padding: 8px 18px;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 88%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toast.show {
+  transform: translate3d(-50%, 0, 0);
+  opacity: 1;
+}
+
+#toast-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+#toast-icon-wrap svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ================================================================
+   LOCK CONFIRMATION MODAL
+   ================================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 20px;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 320px;
+  background: #0d0d12;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95);
+  transform: scale(0.92);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.show .modal-card {
+  transform: scale(1);
+}
+
+.modal-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+
+.modal-icon-badge svg {
+  width: 22px;
+  height: 22px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.modal-btn {
+  padding: 11px 0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+
+.modal-btn:active {
+  transform: scale(0.96);
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-1);
+  border: 1px solid var(--border);
+}
+
+.confirm-btn {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+/* ── PIN Pairing Modal Styling ── */
+.pin-card {
+  border-color: rgba(108, 99, 255, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(108, 99, 255, 0.12);
+}
+
+.pin-icon-badge {
+  background: rgba(108, 99, 255, 0.14);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+}
+
+.pin-input-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+#pin-input {
+  width: 170px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid var(--accent-border);
+  border-radius: 12px;
+  padding: 10px 8px;
+  font-family: monospace, -apple-system, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: 10px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#pin-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(108, 99, 255, 0.4);
+}
+
+.pin-error-msg {
+  font-size: 11px;
+  color: var(--red);
+  margin-bottom: 12px;
+  min-height: 16px;
+  font-weight: 500;
+}
+
+.pin-shake {
+  animation: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.pin-submit-btn {
+  background: var(--accent);
+  box-shadow: 0 4px 14px rgba(108, 99, 255, 0.35);
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.sec-badge {
+  display: inline-flex;
+  align-items: center;
+  color: var(--green);
+  margin-left: 2px;
+}
+
+.sec-badge.hidden {
+  display: none;
+}
+
+.sec-badge svg {
+  width: 13px;
+  height: 13px;
+}
+
+#status-dot.authenticating {
+  background: #f59e0b;
+  box-shadow: 0 0 7px #f59e0b;
+}
+
+/* ================================================================
+   TOP HEADER: Status + Power Bar
+   ================================================================ */
+#header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 2px 4px;
+}
+
+#status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-2);
+  letter-spacing: 0.3px;
+}
+
+#status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+}
+
+#status-dot.connected {
+  background: var(--green);
+  box-shadow: 0 0 7px var(--green);
+}
+
+/* Top Power Bar */
+#top-power-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  padding: 2px 2px;
+}
+
+.tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease, color 0.15s ease;
+  will-change: transform;
+}
+
+.tool-btn:active {
+  background: var(--surface-active);
+  color: var(--text-1);
+  transform: translate3d(0, 0, 0) scale(0.94);
+}
+
+.tool-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ================================================================
+   TRACKPAD AREA (Raised higher for optimal thumb sweep)
+   ================================================================ */
+#trackpad-area {
+  display: grid;
+  grid-template-columns: 1fr 48px;
+  min-height: 0;
+  gap: 0;
+  margin: 2px 0;
+}
+
+#trackpad {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius) 0 0 var(--radius);
+  margin-left: 2px;
+  touch-action: none;
+  position: relative;
+  overflow: hidden;
+}
+
+#trackpad-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 68px;
+  height: 68px;
+  border: 1px dashed rgba(255, 255, 255, 0.035);
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  pointer-events: none;
+}
+
+/* ── High-Speed Scroll Strip ── */
+#scroll-strip {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border);
+  border-left: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-right: 2px;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  cursor: ns-resize;
+  transition: background 0.15s ease;
+}
+
+#scroll-strip:active {
+  background: rgba(108, 99, 255, 0.08);
+  border-color: var(--accent-border);
+}
+
+#scroll-strip svg {
+  width: 15px;
+  height: 15px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+#scroll-track {
+  flex: 1;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  margin: 6px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#scroll-thumb {
+  position: absolute;
+  top: 35%;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: var(--text-3);
+  border-radius: 3px;
+  transition: top 0.08s linear, background 0.15s ease;
+}
+
+#scroll-strip:active #scroll-thumb {
+  background: var(--accent);
+}
+
+/* ================================================================
+   LOWER ZONE: Effortless One-Handed Thumb Reach
+   ================================================================ */
+#lower-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 2px;
+}
+
+/* ── Action Chips ── */
+#chip-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 2px 4px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+  will-change: transform;
+}
+
+.chip:active {
+  background: var(--surface-hover);
+  transform: translate3d(0, 0, 0) scale(0.94);
+}
+
+.chip.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.chip.driver-missing {
+  opacity: 0.55;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.chip svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+#cam-switch-btn {
+  display: none;
+}
+#cam-switch-btn.visible {
+  display: flex;
+}
+
+/* ── Mouse Buttons ── */
+#btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
+  padding: 0 2px;
+}
+
+.mouse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease, color 0.15s ease;
+  will-change: transform;
+}
+
+.mouse-btn:active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  transform: translate3d(0, 0, 0) scale(0.96);
+}
+
+/* ── Control Bar: Keyboard, Media, Tactile Volume ── */
+#control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  padding: 4px 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin: 0 2px;
+}
+
+#kbd-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-2);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+#kbd-btn:active,
+#kbd-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+#kbd-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.media-separator {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.media-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  cursor: pointer;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.12s ease, transform 0.1s ease;
+  font-family: inherit;
+}
+
+.media-btn:active {
+  background: var(--surface-hover);
+  transform: scale(0.92);
+}
+
+.media-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+#media-play svg {
+  width: 19px;
+  height: 19px;
+  color: var(--text-1);
+}
+
+#media-play:active {
+  color: var(--accent);
+}
+
+/* Mute toggle icon */
+#media-mute .icon-mute { display: none; }
+#media-mute[data-state="muted"] .icon-vol  { display: none; }
+#media-mute[data-state="muted"] .icon-mute { display: block; color: var(--red); }
+
+/* ── Tactile Volume Cluster (+ / - / Mute) ── */
+#vol-cluster {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1px 3px;
+}
+
+.vol-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.1s ease;
+}
+
+.vol-btn:active {
+  background: var(--surface-hover);
+  color: var(--accent);
+  transform: scale(0.9);
+}
+
+.vol-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Hidden Native Keyboard Input ── */
+#kbd-input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  border: none;
+  outline: none;
+  z-index: -1;
+  font-size: 16px;
+}
+
+/* ================================================================
+   BOTTOM TAB SWITCHER NAVIGATION BAR
+   ================================================================ */
+#deck-tab-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  padding: 3px 4px;
+  background: rgba(14, 14, 18, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+.tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: var(--text-3);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn svg {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.15s ease;
+}
+
+.tab-btn:active {
+  transform: scale(0.92);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.tab-btn.active svg {
+  transform: scale(1.08);
+}
+
+/* ================================================================
+   DECK 2: MACRO STREAM DECK
+   ================================================================ */
+.deck-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px;
+}
+
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 2px 0 8px 0;
+}
+
+.macro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  aspect-ratio: 1 / 0.95;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text-1);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.macro-card:active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  transform: scale(0.93);
+}
+
+.macro-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent);
+}
+
+.macro-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.macro-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: 0.3px;
+}
+
+.danger-card .macro-icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+}
+.danger-card:active {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ── Live PC Telemetry Dashboard Banner ── */
+.telemetry-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: rgba(18, 18, 24, 0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px);
+}
+
+.telem-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.telem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.telem-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-3);
+  letter-spacing: 0.5px;
+}
+
+.telem-val {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: Consolas, monospace;
+  color: var(--text-1);
+}
+
+.telem-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.telem-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+/* ── Macro Action Toolbar & Add Modal ── */
+.macro-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.macro-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  transition: all 0.15s ease;
+}
+
+.macro-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.macro-action-btn:active {
+  transform: scale(0.95);
+  background: var(--surface-hover);
+}
+
+.macro-action-btn.add-btn {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.macro-modal-card {
+  max-width: 320px;
+}
+
+.macro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  margin: 12px 0;
+}
+
+.macro-form label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.macro-form input, .macro-form select {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+}
+
+.macro-form input:focus, .macro-form select:focus {
+  border-color: var(--accent);
+}
+
+.macro-form select option {
+  background: #121218;
+  color: #ffffff;
+}
+
+/* ================================================================
+   DECK 3: FULL TACTILE NUMPAD
+   ================================================================ */
+.numpad-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 7px;
+  width: 100%;
+  max-width: 340px;
+  height: 100%;
+  max-height: 480px;
+}
+
+.num-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text-1);
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.12s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.num-key:active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  transform: scale(0.92);
+}
+
+.fn-key {
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-2);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.backspace-key {
+  color: var(--red);
+  font-size: 18px;
+}
+
+.enter-key {
+  grid-row: span 2;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.4);
+}
+
+.enter-key:active {
+  background: #5a51e8;
+  color: #fff;
+  transform: scale(0.95);
+}
+
+.zero-key {
+  grid-column: span 2;
+}
+
+/* ================================================================
+   DECK 4: PRESENTATION REMOTE & LIVE TIMER
+   ================================================================ */
+.presenter-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 4px;
+}
+
+.pres-timer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.pres-timer-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-3);
+}
+
+#pres-timer-display {
+  font-family: monospace, -apple-system, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: 2px;
+}
+
+.pres-timer-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.timer-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.timer-btn.sec {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-2);
+}
+
+.timer-btn:active {
+  transform: scale(0.94);
+}
+
+.pres-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex: 1;
+  min-height: 120px;
+}
+
+.pres-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-1);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.pres-nav-btn svg {
+  width: 32px;
+  height: 32px;
+}
+
+.pres-nav-btn.next {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.pres-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.pres-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.pres-tool-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 9px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.pres-tool-card svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pres-tool-card:active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  transform: scale(0.92);
+}
+
+/* ================================================================
+   SSL ROOT CERTIFICATE HELPER BADGE
+   ================================================================ */
+.cert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(108, 99, 255, 0.12);
+  border: 1px solid rgba(108, 99, 255, 0.35);
+  border-radius: 12px;
+  color: var(--accent);
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: auto;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.cert-link:active {
+  transform: scale(0.94);
+  background: rgba(108, 99, 255, 0.25);
+}
+
+.cert-link svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ── SSL Certificate Interactive Modal Styling ── */
+.cert-card {
+  max-width: 420px;
+  width: 90%;
+  text-align: left;
+}
+
+.cert-icon-badge {
+  background: rgba(108, 99, 255, 0.15);
+  color: var(--accent);
+}
+
+.cert-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.cert-modal-buttons .confirm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cert-guide-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.cert-tab-header {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.cert-tab {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cert-tab.active {
+  color: var(--accent);
+  background: rgba(108, 99, 255, 0.1);
+  border-bottom: 2px solid var(--accent);
+}
+
+.cert-tab-content {
+  padding: 10px 14px;
+  font-size: 11px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.cert-tab-content ol {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.cert-tab-content li {
+  margin-bottom: 6px;
+}
+
+.cert-tab-content code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 4px;
+  border-radius: 4px;
+  color: var(--text-1);
+}
+
+/* ── Wireless Speaker Chip Pulse State ── */
+#chip-speaker.active {
+  background: rgba(6, 182, 212, 0.2) !important;
+  border-color: #06b6d4 !important;
+  color: #06b6d4 !important;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
+  animation: pulse-speaker 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse-speaker {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* ================================================================
+   RESPONSIVE TABLET & LANDSCAPE ENGINE
+   ================================================================ */
+
+@media (orientation: landscape) and (max-height: 540px) {
+  #app {
+    grid-template-rows: auto 1fr auto;
+    padding: 2px 8px;
+    gap: 2px;
+  }
+
+  #header {
+    margin-bottom: 2px;
+  }
+
+  #deck-trackpad.deck-pane.active {
+    display: grid;
+    grid-template-columns: 1fr 310px;
+    grid-template-rows: 1fr;
+    gap: 8px;
+    height: 100%;
+  }
+
+  #trackpad-area {
+    height: 100%;
+    margin-bottom: 0;
+  }
+
+  #lower-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 4px;
+  }
+
+  #btn-row {
+    height: 52px;
+  }
+
+  #control-bar {
+    height: 48px;
+  }
+
+  #chip-bar {
+    margin-bottom: 2px;
+  }
+
+  .numpad-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 4px 10px;
+  }
+
+  .presenter-container {
+    max-width: 560px;
+    margin: 0 auto;
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
+  .pres-timer-card {
+    padding: 6px 12px;
+  }
+
+  .pres-nav-btn {
+    height: 60px;
+  }
+}
+
+@media (min-width: 768px) {
+  #app {
+    max-width: 820px;
+    margin: 0 auto;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+
+  .macro-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .numpad-container {
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .presenter-container {
+    max-width: 540px;
+    margin: 0 auto;
+  }
+}

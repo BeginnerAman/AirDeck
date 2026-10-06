@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>AirDeck Pro v3.0</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/static/icon-512.png">
+  <link rel="icon" type="image/png" href="/static/icon.png">
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Floating Feedback Toast with Inline Lucide SVG ── -->
+    <div id="toast" class="toast">
+      <span id="toast-icon-wrap"></span>
+      <span id="toast-text"></span>
+    </div>
+
+    <!-- ── Professional Lock Confirmation Modal ── -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3 class="modal-title">Lock Laptop?</h3>
+        <p class="modal-desc">This will lock Windows and return to the lock screen.</p>
+        <div class="modal-actions">
+          <button id="modal-cancel-btn" class="modal-btn cancel-btn">Cancel</button>
+          <button id="modal-confirm-btn" class="modal-btn confirm-btn">Lock PC</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Security PIN Pairing Modal ── -->
+    <div id="pin-modal-overlay" class="modal-overlay">
+      <div class="modal-card pin-card">
+        <div class="modal-icon-badge pin-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 class="modal-title">Pair with Laptop</h3>
+        <p class="modal-desc">Enter the 4-digit PIN displayed on your laptop screen.</p>
+        <div class="pin-input-wrap">
+          <input type="tel" id="pin-input" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="••••" autocomplete="one-time-code">
+        </div>
+        <div id="pin-error" class="pin-error-msg"></div>
+        <div class="modal-actions">
+          <button id="pin-submit-btn" class="modal-btn confirm-btn pin-submit-btn">Verify & Connect</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Add / Edit Macro Modal ── -->
+    <div id="macro-modal-overlay" class="modal-overlay">
+      <div class="modal-card macro-modal-card">
+        <h3 class="modal-title">New Custom Macro</h3>
+        <p class="modal-desc">Create a custom action, shortcut, or app launcher.</p>
+        <div class="macro-form">
+          <label>Label</label>
+          <input type="text" id="macro-input-label" placeholder="e.g. Spotify, Calculator" maxlength="16">
+          <label>Type</label>
+          <select id="macro-input-type">
+            <option value="launch">Launch App / Command</option>
+            <option value="url">Open Website URL</option>
+            <option value="hotkey">Keyboard Hotkey</option>
+            <option value="action">System Action</option>
+            <option value="key">Type Text</option>
+          </select>
+          <label>Target</label>
+          <input type="text" id="macro-input-target" placeholder="e.g. calc.exe, https://youtube.com, ctrl+c">
+        </div>
+        <div class="modal-actions">
+          <button id="macro-cancel-btn" class="modal-btn cancel-btn">Cancel</button>
+          <button id="macro-save-btn" class="modal-btn confirm-btn">Create Macro</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SSL Certificate & Security Trust Modal ── -->
+    <div id="cert-modal-overlay" class="modal-overlay">
+      <div class="modal-card cert-card">
+        <div class="modal-icon-badge cert-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h3 class="modal-title">Install SSL Certificate</h3>
+        <p class="modal-desc">Install once on your phone to remove browser security warnings and enable 0-warning launch.</p>
+        
+        <div class="cert-modal-buttons">
+          <button id="cert-instant-download-btn" class="modal-btn confirm-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Certificate (.crt)
+          </button>
+          <button id="cert-copy-text-btn" class="modal-btn sec-btn">Copy Cert Text</button>
+        </div>
+
+        <div class="cert-guide-box">
+          <div class="cert-tab-header">
+            <button class="cert-tab active" id="tab-btn-android">Android Guide</button>
+            <button class="cert-tab" id="tab-btn-ios">iPhone (iOS) Guide</button>
+          </div>
+          <div class="cert-tab-content" id="tab-content-android">
+            <ol>
+              <li>Tap <b>Download Certificate (.crt)</b> above.</li>
+              <li>Go to phone <b>Settings ➔ Security ➔ Encryption & Credentials</b>.</li>
+              <li>Tap <b>Install a certificate ➔ CA certificate</b>.</li>
+              <li>Select downloaded <code>airdeck_cert.crt</code> from your Downloads folder.</li>
+            </ol>
+          </div>
+          <div class="cert-tab-content hidden" id="tab-content-ios">
+            <ol>
+              <li>Tap <b>Download Certificate (.crt)</b> above.</li>
+              <li>Open <b>Settings ➔ Profile Downloaded ➔ Install</b>.</li>
+              <li>Go to <b>Settings ➔ General ➔ About ➔ Certificate Trust Settings</b>.</li>
+              <li>Turn ON <b>Full Trust</b> for <i>AirDeck Pro Local</i>.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="cert-modal-close-btn" class="modal-btn cancel-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Top Header: Status + Quick Power Tools ── -->
+    <header id="header">
+      <div id="status-bar">
+        <span id="status-dot"></span>
+        <span id="status-text">Connecting…</span>
+        <span id="status-sec-badge" class="sec-badge hidden" title="Encrypted & Paired">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </span>
+        <button id="cert-download-link" class="cert-link" title="Download & Install SSL Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>SSL Cert</span>
+        </button>
+      </div>
+
+      <!-- Top Power Bar (Daily Useful PC Shortcuts) -->
+      <div id="top-power-bar">
+        <button class="tool-btn" id="tool-desktop" title="Show Desktop (Win+D)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <span>Desktop</span>
+        </button>
+
+        <button class="tool-btn" id="tool-switch" title="Switch App (Alt+Tab)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 3 21 3 21 8"/>
+            <line x1="4" y1="20" x2="21" y2="3"/>
+            <polyline points="21 16 21 21 16 21"/>
+            <line x1="15" y1="15" x2="21" y2="21"/>
+            <line x1="4" y1="4" x2="9" y2="9"/>
+          </svg>
+          <span>Alt+Tab</span>
+        </button>
+
+        <button class="tool-btn" id="tool-snip" title="Screenshot (Win+Shift+S)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="6" r="3"/>
+            <circle cx="6" cy="18" r="3"/>
+            <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+            <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+            <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+          </svg>
+          <span>Snip</span>
+        </button>
+
+        <button class="tool-btn" id="tool-close" title="Close Tab (Ctrl+W)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          <span>Close</span>
+        </button>
+
+        <button class="tool-btn" id="tool-lock" title="Lock PC (Win+L)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Lock</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Multi-Deck Container ── -->
+    <div id="decks-container">
+
+      <!-- ── DECK 1: Trackpad & Media Remote ── -->
+      <section id="deck-trackpad" class="deck-pane active">
+        <!-- Trackpad Area -->
+        <main id="trackpad-area">
+          <div id="trackpad">
+            <div id="trackpad-ghost"></div>
+          </div>
+          <div id="scroll-strip" title="Adaptive Velocity Scroll Strip (drag slow or fast)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"/>
+            </svg>
+            <div id="scroll-track">
+              <div id="scroll-thumb"></div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </main>
+
+        <!-- Lower Zone -->
+        <footer id="lower-zone">
+          <div id="chip-bar">
+            <button class="chip" id="chip-copy" title="Copy from Laptop (Ctrl+C)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span>Copy</span>
+            </button>
+
+            <button class="chip" id="chip-paste" title="Tap: Paste | Long Press: Send Phone Clipboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="2" width="8" height="4" rx="1"/>
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              </svg>
+              <span>Paste</span>
+            </button>
+
+            <button class="chip" id="chip-mic" title="Toggle Studio Mic (Speak into Phone ➔ Heard on Laptop)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="22"/>
+              </svg>
+              <span>Mic</span>
+            </button>
+
+            <button class="chip" id="chip-speaker" title="Toggle Wireless Speaker (Laptop Audio ➔ Heard on Phone)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+              <span>Speaker</span>
+            </button>
+
+            <button class="chip" id="chip-cam" title="Toggle HD Webcam">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
+                <circle cx="12" cy="13" r="3"/>
+              </svg>
+              <span>Cam</span>
+            </button>
+
+            <button class="chip" id="cam-switch-btn" title="Flip Camera">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 2v6h-6"/>
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                <path d="M3 22v-6h6"/>
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+              </svg>
+              <span>Flip</span>
+            </button>
+          </div>
+
+          <div id="btn-row">
+            <button class="mouse-btn" id="btn-left">Left</button>
+            <button class="mouse-btn" id="btn-middle">Middle</button>
+            <button class="mouse-btn" id="btn-right">Right</button>
+          </div>
+
+          <div id="control-bar">
+            <button id="kbd-btn" aria-label="Toggle Keyboard" title="Open Native Keyboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>
+              </svg>
+            </button>
+
+            <div class="media-separator"></div>
+
+            <button class="media-btn" id="media-seekb" aria-label="Seek Back 10s" title="Seek -10s">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="19 20 9 12 19 4 19 20"/>
+                <line x1="5" y1="19" x2="5" y2="5"/>
+              </svg>
+            </button>
+
+            <button class="media-btn" id="media-play" aria-label="Play / Pause" title="Play / Pause Toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 14 10 5 17 5 3"/>
+                <line x1="17" y1="4" x2="17" y2="16"/>
+                <line x1="21" y1="4" x2="21" y2="16"/>
+              </svg>
+            </button>
+
+            <button class="media-btn" id="media-seekf" aria-label="Seek Forward 10s" title="Seek +10s">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 4 15 12 5 20 5 4"/>
+                <line x1="19" y1="5" x2="19" y2="19"/>
+              </svg>
+            </button>
+
+            <div class="media-separator"></div>
+
+            <div id="vol-cluster">
+              <button class="vol-btn" id="vol-down" aria-label="Volume Down" title="Hold or tap: Volume -">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+
+              <button class="media-btn" id="media-mute" data-state="unmuted" aria-label="Mute Toggle" title="Mute / Unmute">
+                <svg class="icon-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+                <svg class="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <line x1="22" y1="9" x2="16" y2="15"/>
+                  <line x1="16" y1="9" x2="22" y2="15"/>
+                </svg>
+              </button>
+
+              <button class="vol-btn" id="vol-up" aria-label="Volume Up" title="Hold or tap: Volume +">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </footer>
+      </section>
+
+      <!-- ── DECK 2: Macro Stream Deck with Live PC Telemetry ── -->
+      <section id="deck-macro" class="deck-pane">
+        <div class="deck-scroll-body">
+
+          <!-- Live PC Telemetry Dashboard Banner -->
+          <div class="telemetry-bar" id="telemetry-bar">
+            <div class="telem-item" id="telem-cpu">
+              <div class="telem-header">
+                <span class="telem-label">CPU</span>
+                <span class="telem-val" id="telem-cpu-val">--%</span>
+              </div>
+              <div class="telem-track"><div class="telem-fill" id="telem-cpu-fill" style="width: 0%"></div></div>
+            </div>
+
+            <div class="telem-item" id="telem-ram">
+              <div class="telem-header">
+                <span class="telem-label">RAM</span>
+                <span class="telem-val" id="telem-ram-val">--%</span>
+              </div>
+              <div class="telem-track"><div class="telem-fill" id="telem-ram-fill" style="width: 0%"></div></div>
+            </div>
+
+            <div class="telem-item" id="telem-batt">
+              <div class="telem-header">
+                <span class="telem-label">BATT</span>
+                <span class="telem-val" id="telem-batt-val">--%</span>
+              </div>
+              <div class="telem-track"><div class="telem-fill" id="telem-batt-fill" style="width: 0%"></div></div>
+            </div>
+          </div>
+
+          <!-- Dynamic Customizable Macro Grid -->
+          <div class="macro-grid" id="macro-grid">
+            <!-- Dynamically populated via app.js -->
+          </div>
+
+          <!-- Macro Grid Action Toolbar -->
+          <div class="macro-actions-row">
+            <button class="macro-action-btn add-btn" id="macro-add-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Add Macro</span>
+            </button>
+            <button class="macro-action-btn reset-btn" id="macro-reset-btn" title="Restore factory default macros">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <span>Reset</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── DECK 3: Full Tactile Numpad ── -->
+      <section id="deck-numpad" class="deck-pane">
+        <div class="numpad-container">
+          <div class="numpad-grid">
+            <button class="num-key fn-key" data-skey="Escape">ESC</button>
+            <button class="num-key fn-key" data-key="/">/</button>
+            <button class="num-key fn-key" data-key="*">*</button>
+            <button class="num-key fn-key backspace-key" data-skey="Backspace">⌫</button>
+
+            <button class="num-key" data-key="7">7</button>
+            <button class="num-key" data-key="8">8</button>
+            <button class="num-key" data-key="9">9</button>
+            <button class="num-key fn-key" data-key="-">-</button>
+
+            <button class="num-key" data-key="4">4</button>
+            <button class="num-key" data-key="5">5</button>
+            <button class="num-key" data-key="6">6</button>
+            <button class="num-key fn-key" data-key="+">+</button>
+
+            <button class="num-key" data-key="1">1</button>
+            <button class="num-key" data-key="2">2</button>
+            <button class="num-key" data-key="3">3</button>
+            <button class="num-key enter-key" data-skey="Enter">ENTER</button>
+
+            <button class="num-key zero-key" data-key="0">0</button>
+            <button class="num-key" data-key=".">.</button>
+            <button class="num-key fn-key" data-key="=">=</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DECK 4: Presentation Remote & Live Timer ── -->
+      <section id="deck-presenter" class="deck-pane">
+        <div class="presenter-container">
+          <!-- Live Presentation Stopwatch -->
+          <div class="pres-timer-card">
+            <span class="pres-timer-label">ELAPSED TIME</span>
+            <div id="pres-timer-display">00:00</div>
+            <div class="pres-timer-actions">
+              <button id="pres-timer-toggle" class="timer-btn">Start</button>
+              <button id="pres-timer-reset" class="timer-btn sec">Reset</button>
+            </div>
+          </div>
+
+          <!-- Big Slide Navigators -->
+          <div class="pres-nav-grid">
+            <button class="pres-nav-btn prev" id="pres-prev-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>PREV</span>
+            </button>
+            <button class="pres-nav-btn next" id="pres-next-btn">
+              <span>NEXT</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+
+          <!-- Presentation Tools Bar -->
+          <div class="pres-tools-grid">
+            <button class="pres-tool-card" data-action="slideshow_start">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>Start (F5)</span>
+            </button>
+            <button class="pres-tool-card" data-action="slideshow_end">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              <span>End (Esc)</span>
+            </button>
+            <button class="pres-tool-card" data-action="slide_black">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>
+              <span>Black (B)</span>
+            </button>
+            <button class="pres-tool-card" data-action="slide_white">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span>White (W)</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Bottom Tab Switcher Navigation Bar ── -->
+    <nav id="deck-tab-bar">
+      <button class="tab-btn active" data-deck="trackpad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="4"/><line x1="12" y1="6" x2="12" y2="10"/></svg>
+        <span>Trackpad</span>
+      </button>
+
+      <button class="tab-btn" data-deck="macro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Stream Deck</span>
+      </button>
+
+      <button class="tab-btn" data-deck="numpad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="8.01" y2="8"/><line x1="12" y1="8" x2="12.01" y2="8"/><line x1="16" y1="8" x2="16.01" y2="8"/><line x1="8" y1="12" x2="8.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="16" y1="12" x2="16.01" y2="12"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="12" y1="16" x2="16" y2="16"/></svg>
+        <span>Numpad</span>
+      </button>
+
+      <button class="tab-btn" data-deck="presenter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>
+        <span>Presenter</span>
+      </button>
+    </nav>
+
+    <!-- Hidden Native Keyboard Input Trigger -->
+    <input type="text" id="kbd-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="send">
+
+  </div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

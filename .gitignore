@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Distribution / packaging / build artifacts
+build/
+dist/
+dist_installer/
+*.egg-info/
+*.egg
+*.zip
+
+# PyInstaller
+*.manifest
+
+# Pytest / Unit test caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local security certificates (generated dynamically at runtime)
+companion_bridge/certs/*.pem
+certs/*.pem
+
+# Local device pairing tokens and runtime state (generated dynamically at runtime)
+companion_bridge/paired_tokens.json
+companion_bridge/runtime_state.json
+paired_tokens.json
+runtime_state.json
+
+# Environment and IDE files
+.venv/
+venv/
+ENV/
+.env
+.vscode/
+.idea/
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+.DS_Store

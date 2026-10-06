@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#121218"/>
+      <stop offset="100%" stop-color="#050508"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6C63FF"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Rounded App Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+  <!-- Glowing Center Accent Box -->
+  <rect x="80" y="80" width="352" height="230" rx="32" fill="rgba(108,99,255,0.06)" stroke="url(#accent)" stroke-width="6" filter="url(#glow)"/>
+  <!-- Trackpad Cursor Dot -->
+  <circle cx="256" cy="195" r="28" fill="url(#accent)"/>
+  <!-- Bottom Deck Quick Controls Grid -->
+  <rect x="80" y="340" width="96" height="88" rx="20" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+  <rect x="208" y="340" width="96" height="88" rx="20" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+  <rect x="336" y="340" width="96" height="88" rx="20" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+  <!-- Internal Mini-Icons -->
+  <circle cx="128" cy="384" r="12" fill="#6C63FF"/>
+  <polygon points="250,372 268,384 250,396" fill="#22c55e"/>
+  <rect x="372" y="374" width="24" height="20" rx="4" fill="#ef4444"/>
+</svg>

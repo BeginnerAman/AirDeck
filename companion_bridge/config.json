@@ -1,0 +1,26 @@
+{
+  "server": {
+    "port": 8765,
+    "auto_fallback_port": true,
+    "max_port_attempts": 10,
+    "host": "0.0.0.0"
+  },
+  "input": {
+    "sensitivity": 2.0,
+    "accel_power": 1.2,
+    "wheel_delta": 120
+  },
+  "security": {
+    "max_failed_attempts": 5,
+    "lockout_seconds": 60,
+    "token_lifetime_days": 365
+  },
+  "hardware": {
+    "cam_fps": 15,
+    "cam_quality": 0.7,
+    "audio_sample_rate": 16000
+  },
+  "general": {
+    "start_with_windows": false
+  }
+}

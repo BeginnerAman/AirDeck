@@ -1,0 +1,115 @@
+[
+  {
+    "id": "m_taskmgr",
+    "label": "Task Mgr",
+    "icon": "activity",
+    "type": "action",
+    "target": "taskmgr",
+    "color": "#6366f1"
+  },
+  {
+    "id": "m_explorer",
+    "label": "Explorer",
+    "icon": "folder",
+    "type": "action",
+    "target": "explorer",
+    "color": "#3b82f6"
+  },
+  {
+    "id": "m_terminal",
+    "label": "Run / CMD",
+    "icon": "terminal",
+    "type": "action",
+    "target": "terminal",
+    "color": "#10b981"
+  },
+  {
+    "id": "m_settings",
+    "label": "Settings",
+    "icon": "settings",
+    "type": "action",
+    "target": "settings",
+    "color": "#8b5cf6"
+  },
+  {
+    "id": "m_newtab",
+    "label": "New Tab",
+    "icon": "globe",
+    "type": "action",
+    "target": "newtab",
+    "color": "#06b6d4"
+  },
+  {
+    "id": "m_discord",
+    "label": "Discord Mute",
+    "icon": "micoff",
+    "type": "action",
+    "target": "discord_mute",
+    "color": "#5865F2"
+  },
+  {
+    "id": "m_fullscreen",
+    "label": "Fullscreen",
+    "icon": "maximize",
+    "type": "action",
+    "target": "fullscreen",
+    "color": "#f59e0b"
+  },
+  {
+    "id": "m_snip",
+    "label": "Screenshot",
+    "icon": "scissors",
+    "type": "action",
+    "target": "snip",
+    "color": "#ec4899"
+  },
+  {
+    "id": "m_appswitch",
+    "label": "Alt + Tab",
+    "icon": "switch",
+    "type": "action",
+    "target": "appswitch",
+    "color": "#6366f1"
+  },
+  {
+    "id": "m_desktop",
+    "label": "Desktop",
+    "icon": "monitor",
+    "type": "action",
+    "target": "desktop",
+    "color": "#14b8a6"
+  },
+  {
+    "id": "m_calc",
+    "label": "Calculator",
+    "icon": "calculator",
+    "type": "launch",
+    "target": "calc.exe",
+    "color": "#f97316"
+  },
+  {
+    "id": "m_notepad",
+    "label": "Notepad",
+    "icon": "filetext",
+    "type": "launch",
+    "target": "notepad.exe",
+    "color": "#64748b"
+  },
+  {
+    "id": "m_closeapp",
+    "label": "Alt + F4",
+    "icon": "x",
+    "type": "action",
+    "target": "closeapp",
+    "color": "#ef4444"
+  },
+  {
+    "id": "m_lock",
+    "label": "Lock PC",
+    "icon": "lock",
+    "type": "action",
+    "target": "lock",
+    "color": "#dc2626",
+    "confirm": true
+  }
+]
