@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirDeck Pro - Wireless Hardware Companion Suite for Windows</title>
+  <meta name="description" content="Turn any smartphone into an ultra-low-latency wireless trackpad, macro stream deck, numeric keypad, presentation remote, virtual webcam, and microphone for Windows PCs without installing any mobile app.">
+  <meta name="keywords" content="stream deck, virtual webcam, trackpad, touchpad, remote control, pwa, windows utility, wireless controller, numpad, presentation clicker, wasapi loopback">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'%3E%3Crect x='2' y='3' width='20' height='14' rx='2' fill='none' stroke='%236366f1' stroke-width='2'/%3E%3Cpath d='M8 21h8M12 17v4' stroke='%236366f1' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0f;
+      --bg-alt: #0e111a;
+      --surface: #141724;
+      --surface-hover: #1c2032;
+      --border: #23283d;
+      --border-focus: #3b4366;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.2);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container and Layout */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 10, 15, 0.85);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+
+    .brand-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn-lg {
+      padding: 14px 28px;
+      font-size: 16px;
+      border-radius: var(--radius-full);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #4338ca);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px var(--primary-glow);
+      background: linear-gradient(135deg, #7073ff, #4f46e5);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-focus);
+      color: #fff;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      padding: 96px 0 64px;
+      overflow: hidden;
+    }
+
+    .hero-glow-1 {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 400px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-glow-2 {
+      position: absolute;
+      top: 150px;
+      right: 10%;
+      width: 400px;
+      height: 300px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .hero-title {
+      font-size: 58px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #fff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, #818cf8 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .hero-subtext {
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-subtext span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Interactive Simulator */
+    .sim-wrap {
+      margin-top: 64px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .device-frame {
+      width: 360px;
+      background: #111420;
+      border: 8px solid #1e2336;
+      border-radius: 40px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px var(--primary-glow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .device-notch {
+      height: 24px;
+      background: #111420;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .device-speaker {
+      width: 60px;
+      height: 4px;
+      background: #23283d;
+      border-radius: 2px;
+    }
+
+    .sim-header {
+      padding: 12px 16px;
+      background: #0d0f18;
+      border-bottom: 1px solid #1e2235;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sim-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .sim-status-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--success);
+    }
+
+    .sim-tools {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sim-tool-btn {
+      background: #191c2b;
+      border: 1px solid #282d44;
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .sim-content {
+      height: 380px;
+      background: #090a10;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sim-deck {
+      display: none;
+      height: 100%;
+      padding: 14px;
+      flex-direction: column;
+    }
+
+    .sim-deck.active {
+      display: flex;
+    }
+
+    /* Deck 1 Trackpad */
+    .sim-trackpad-area {
+      flex: 1;
+      background: #121522;
+      border: 1px dashed #262c45;
+      border-radius: 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      user-select: none;
+    }
+
+    .sim-trackpad-hint {
+      color: var(--text-dim);
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    .sim-cursor {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--primary);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      transition: transform 0.05s ease-out;
+    }
+
+    .sim-mouse-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .sim-mouse-btn {
+      background: #181c2c;
+      border: 1px solid #282f48;
+      color: var(--text);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sim-mouse-btn:active {
+      background: var(--primary);
+    }
+
+    /* Deck 2 Stream Deck */
+    .sim-telemetry {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .sim-telem-card {
+      background: #141726;
+      border: 1px solid #242940;
+      border-radius: 8px;
+      padding: 6px;
+      text-align: center;
+    }
+
+    .sim-telem-label {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .sim-telem-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .sim-macro-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      flex: 1;
+    }
+
+    .sim-macro-btn {
+      background: #161928;
+      border: 1px solid #272d46;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .sim-macro-btn:hover {
+      background: #20243a;
+      border-color: var(--primary);
+    }
+
+    .sim-macro-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--primary);
+    }
+
+    /* Deck 3 Numpad */
+    .sim-numpad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      flex: 1;
+    }
+
+    .sim-num-display {
+      grid-column: span 4;
+      background: #121522;
+      border: 1px solid #23283f;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      min-height: 42px;
+    }
+
+    .sim-num-btn {
+      background: #161928;
+      border: 1px solid #262c44;
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+    }
+
+    .sim-num-btn:active {
+      background: var(--primary);
+    }
+
+    .sim-num-op {
+      background: #1e2238;
+      color: #a5b4fc;
+    }
+
+    /* Deck 4 Presenter */
+    .sim-timer-box {
+      background: #141726;
+      border: 1px solid #242940;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .sim-timer-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .sim-timer-digits {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 6px 0;
+    }
+
+    .sim-timer-btn {
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sim-slide-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .sim-slide-btn {
+      background: #191d30;
+      border: 1px solid #293050;
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .sim-slide-btn:active {
+      background: var(--primary);
+    }
+
+    /* Simulator Tab Bar */
+    .sim-tabs {
+      background: #0d0f18;
+      border-top: 1px solid #1e2235;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 4px 14px;
+    }
+
+    .sim-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .sim-tab-item.active {
+      color: var(--primary);
+    }
+
+    .sim-tab-item svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    /* Section Styles */
+    .section {
+      padding: 104px 0;
+      position: relative;
+    }
+
+    .section-alt {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 64px;
+    }
+
+    .section-tag {
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Feature Grid */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-focus);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--primary);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Architecture / Deep Dive Box */
+    .tech-box {
+      background: #0d0f18;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-top: 48px;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .tech-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tech-item {
+      display: flex;
+      gap: 16px;
+    }
+
+    .tech-bullet {
+      width: 28px;
+      height: 28px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tech-bullet svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--accent);
+    }
+
+    .tech-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .tech-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .code-window {
+      background: #08090e;
+      border: 1px solid #1f2438;
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .code-header {
+      background: #111420;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #1f2438;
+    }
+
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .code-dot-red { background: #ef4444; }
+    .code-dot-yellow { background: #f59e0b; }
+    .code-dot-green { background: #10b981; }
+
+    .code-body {
+      padding: 20px;
+      line-height: 1.7;
+      color: #cbd5e1;
+      overflow-x: auto;
+    }
+
+    .code-keyword { color: #f43f5e; }
+    .code-func { color: #38bdf8; }
+    .code-str { color: #34d399; }
+    .code-comment { color: #64748b; }
+
+    /* Setup Steps */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Comparison Table */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    th, td {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #10131f;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    .highlight-col {
+      background: rgba(99, 102, 241, 0.05);
+      color: #a5b4fc;
+      font-weight: 600;
+    }
+
+    /* FAQ Accordion */
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .faq-item.open {
+      border-color: var(--primary);
+    }
+
+    .faq-question {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 17px;
+      user-select: none;
+    }
+
+    .faq-icon {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+      stroke: var(--primary);
+    }
+
+    .faq-answer {
+      padding: 0 24px 20px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* CTA Section */
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 28px;
+      padding: 64px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-title {
+      font-size: 38px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-desc {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      background: #06070a;
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 40px;
+      }
+      .section-title {
+        font-size: 30px;
+      }
+      .nav-links {
+        display: none;
+      }
+      .tech-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <span>AirDeck Pro</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#simulator">Live Demo</a></li>
+        <li><a href="#media-bridge">Media Bridge</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="https://github.com/BeginnerAman/AirDeck" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip" class="btn btn-primary btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download v3.0
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="container hero-content">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        AirDeck Pro v3.0.0 is Live on GitHub
+      </div>
+      <h1 class="hero-title">
+        <span>Turn your smartphone into a</span><br>
+        <span class="gradient-text">Wireless Hardware Deck</span>
+      </h1>
+      <p class="hero-desc">
+        A zero-install progressive companion for Windows. Transform any phone into a high-precision trackpad, custom macro pad, tactile numpad, presentation clicker, virtual webcam, and studio mic over local Wi-Fi.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip" class="btn btn-primary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download for Windows (Portable .zip)
+        </a>
+        <a href="https://github.com/BeginnerAman/AirDeck" class="btn btn-secondary btn-lg" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          Star on GitHub
+        </a>
+      </div>
+
+      <div class="hero-subtext">
+        <span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Zero app store installation
+        </span>
+        <span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          1ms Win32 input scheduling
+        </span>
+        <span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Zero-trust 4-digit PIN pairing
+        </span>
+        <span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          100% Free & Open Source
+        </span>
+      </div>
+
+      <!-- Live Interactive Simulator -->
+      <div class="sim-wrap" id="simulator">
+        <div class="device-frame">
+          <div class="device-notch"><div class="device-speaker"></div></div>
+
+          <div class="sim-header">
+            <div class="sim-status">
+              <span class="sim-status-dot"></span>
+              AirDeck Connected
+            </div>
+            <div class="sim-tools">
+              <button class="sim-tool-btn" onclick="alert('Triggered Desktop (Win+D)')">Desktop</button>
+              <button class="sim-tool-btn" onclick="alert('Triggered Alt+Tab')">Alt+Tab</button>
+              <button class="sim-tool-btn" onclick="alert('Triggered Snip (Win+Shift+S)')">Snip</button>
+            </div>
+          </div>
+
+          <div class="sim-content">
+            <!-- Deck 1: Trackpad -->
+            <div class="sim-deck active" id="sim-deck-trackpad">
+              <div class="sim-trackpad-area" id="sim-pad">
+                <span class="sim-trackpad-hint">Touchpad Surface (Move cursor here)</span>
+                <div class="sim-cursor" id="sim-dot" style="left: 50%; top: 50%;"></div>
+              </div>
+              <div class="sim-mouse-buttons">
+                <button class="sim-mouse-btn" onclick="simClick('Left')">Left Click</button>
+                <button class="sim-mouse-btn" onclick="simClick('Right')">Right Click</button>
+              </div>
+            </div>
+
+            <!-- Deck 2: Stream Deck -->
+            <div class="sim-deck" id="sim-deck-macro">
+              <div class="sim-telemetry">
+                <div class="sim-telem-card">
+                  <div class="sim-telem-label">CPU</div>
+                  <div class="sim-telem-val" id="sim-cpu">14%</div>
+                </div>
+                <div class="sim-telem-card">
+                  <div class="sim-telem-label">RAM</div>
+                  <div class="sim-telem-val">42%</div>
+                </div>
+                <div class="sim-telem-card">
+                  <div class="sim-telem-label">BATT</div>
+                  <div class="sim-telem-val">96%</div>
+                </div>
+              </div>
+              <div class="sim-macro-grid">
+                <button class="sim-macro-btn" onclick="alert('Executed Macro: Task Manager')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  Task Mgr
+                </button>
+                <button class="sim-macro-btn" onclick="alert('Executed Macro: File Explorer')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  Explorer
+                </button>
+                <button class="sim-macro-btn" onclick="alert('Executed Macro: Terminal')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                  Terminal
+                </button>
+                <button class="sim-macro-btn" onclick="alert('Executed Macro: Spotify')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12a8 8 0 0 1 8 0M9 15a6 6 0 0 1 6 0M7 9a10 10 0 0 1 10 0"/></svg>
+                  Spotify
+                </button>
+                <button class="sim-macro-btn" onclick="alert('Executed Macro: Calculator')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>
+                  Calc
+                </button>
+                <button class="sim-macro-btn" onclick="alert('Executed Macro: Mute Audio')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                  Mute
+                </button>
+              </div>
+            </div>
+
+            <!-- Deck 3: Numpad -->
+            <div class="sim-deck" id="sim-deck-numpad">
+              <div class="sim-numpad-grid">
+                <div class="sim-num-display" id="sim-calc-val">0</div>
+                <button class="sim-num-btn sim-num-op" onclick="simNumClear()">C</button>
+                <button class="sim-num-btn sim-num-op" onclick="simNumPress('/')">/</button>
+                <button class="sim-num-btn sim-num-op" onclick="simNumPress('*')">*</button>
+                <button class="sim-num-btn sim-num-op" onclick="simNumPress('-')">-</button>
+                <button class="sim-num-btn" onclick="simNumPress('7')">7</button>
+                <button class="sim-num-btn" onclick="simNumPress('8')">8</button>
+                <button class="sim-num-btn" onclick="simNumPress('9')">9</button>
+                <button class="sim-num-btn sim-num-op" onclick="simNumPress('+')">+</button>
+                <button class="sim-num-btn" onclick="simNumPress('4')">4</button>
+                <button class="sim-num-btn" onclick="simNumPress('5')">5</button>
+                <button class="sim-num-btn" onclick="simNumPress('6')">6</button>
+                <button class="sim-num-btn sim-num-op" onclick="simNumCalc()">=</button>
+                <button class="sim-num-btn" onclick="simNumPress('1')">1</button>
+                <button class="sim-num-btn" onclick="simNumPress('2')">2</button>
+                <button class="sim-num-btn" onclick="simNumPress('3')">3</button>
+                <button class="sim-num-btn" onclick="simNumPress('0')">0</button>
+              </div>
+            </div>
+
+            <!-- Deck 4: Presenter -->
+            <div class="sim-deck" id="sim-deck-presenter">
+              <div class="sim-timer-box">
+                <div class="sim-timer-label">ELAPSED TIME</div>
+                <div class="sim-timer-digits" id="sim-timer-val">00:00</div>
+                <button class="sim-timer-btn" id="sim-timer-toggle" onclick="simTimerToggle()">Start Timer</button>
+              </div>
+              <div class="sim-slide-nav">
+                <button class="sim-slide-btn" onclick="alert('Slide: Previous')">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                  PREV
+                </button>
+                <button class="sim-slide-btn" onclick="alert('Slide: Next')">
+                  NEXT
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulator Tabs -->
+          <div class="sim-tabs">
+            <button class="sim-tab-item active" onclick="switchSimDeck('trackpad', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="4"/><line x1="12" y1="6" x2="12" y2="10"/></svg>
+              Trackpad
+            </button>
+            <button class="sim-tab-item" onclick="switchSimDeck('macro', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              Stream Deck
+            </button>
+            <button class="sim-tab-item" onclick="switchSimDeck('numpad', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="8.01" y2="8"/><line x1="12" y1="8" x2="12.01" y2="8"/><line x1="16" y1="8" x2="16.01" y2="8"/></svg>
+              Numpad
+            </button>
+            <button class="sim-tab-item" onclick="switchSimDeck('presenter', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>
+              Presenter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 4-in-1 Modular Decks Section -->
+  <section class="section section-alt" id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Modular Hardware Decks</div>
+        <h2 class="section-title">Four dedicated controllers in one single browser tab</h2>
+        <p class="section-desc">
+          Switch between four hardware decks seamlessly without installing heavy desktop drivers or mobile companion software.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <!-- Deck 1 -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="4"/>
+              <line x1="12" y1="6" x2="12" y2="10"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Precision Trackpad</h3>
+          <p class="card-desc">
+            Direct Win32 SendInput integration with sub-pixel cursor delta accumulation, high-speed velocity scroll strip, tap-to-click, and voice-to-text dictation.
+          </p>
+        </div>
+
+        <!-- Deck 2 -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Macro Stream Deck</h3>
+          <p class="card-desc">
+            Custom macro pad with one-tap app launchers, URLs, hotkeys, and system triggers. Includes live real-time CPU, RAM, and Battery telemetry metrics.
+          </p>
+        </div>
+
+        <!-- Deck 3 -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="3" width="16" height="18" rx="2"/>
+              <line x1="8" y1="8" x2="8.01" y2="8"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+              <line x1="16" y1="8" x2="16.01" y2="8"/>
+              <line x1="8" y1="12" x2="8.01" y2="12"/>
+              <line x1="12" y1="12" x2="12.01" y2="12"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Full Tactile Numpad</h3>
+          <p class="card-desc">
+            The ideal companion for compact 60% and tenkeyless mechanical keyboards. Complete 17-key numeric layout with operators, Backspace, Enter, and Escape.
+          </p>
+        </div>
+
+        <!-- Deck 4 -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h20"/>
+              <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/>
+              <path d="m7 21 5-5 5 5"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Presentation Remote</h3>
+          <p class="card-desc">
+            Take command of PowerPoint, Keynote, or Google Slides. Includes large tactile Next/Prev buttons, F5 slideshow start, screen blacking, and speech timer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hardware Media Bridge -->
+  <section class="section" id="media-bridge">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Two-Way Hardware Bridges</div>
+        <h2 class="section-title">Upgrade your PC audio and video instantly</h2>
+        <p class="section-desc">
+          AirDeck Pro features decoupled hardware drivers that stream camera and audio bidirectionally over WebSocket binary protocols.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <!-- Virtual Webcam -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 7l-7 5 7 5V7z"/>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <h3 class="card-title">HD Virtual Webcam</h3>
+          <p class="card-desc">
+            Stream your phone high-resolution camera directly into Windows as a virtual camera device. Plug-and-play compatible with Zoom, Google Meet, Teams, Discord, and OBS.
+          </p>
+        </div>
+
+        <!-- Studio Mic -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Studio Wireless Mic</h3>
+          <p class="card-desc">
+            Use your smartphone microphone as your primary PC input. Powered by low-latency 16kHz PCM audio streaming routed into VB-Audio Virtual Cable or direct audio endpoints.
+          </p>
+        </div>
+
+        <!-- Extended Speaker -->
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Extended PC Speaker</h3>
+          <p class="card-desc">
+            Listen to your Windows desktop audio on your mobile phone or connected earbuds. Real-time system audio capture via Windows WASAPI Loopback.
+          </p>
+        </div>
+      </div>
+
+      <!-- Architecture Deep Dive Box -->
+      <div class="tech-box">
+        <div class="tech-grid">
+          <div>
+            <h3 style="font-size: 26px; font-weight: 800; margin-bottom: 16px;">Engineered for Sub-Millisecond Input Latency</h3>
+            <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 24px;">
+              Unlike traditional remote control software that chokes Python event loops with synchronous operating system calls, AirDeck Pro decouples network ingestion from OS hardware execution.
+            </p>
+            <ul class="tech-list">
+              <li class="tech-item">
+                <div class="tech-bullet">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div class="tech-title">Direct Win32 SendInput (ctypes)</div>
+                  <div class="tech-desc">Bypasses high-level wrapper overhead for instant OS hardware cursor injection.</div>
+                </div>
+              </li>
+              <li class="tech-item">
+                <div class="tech-bullet">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div class="tech-title">1ms Multimedia Timer (winmm.timeBeginPeriod)</div>
+                  <div class="tech-desc">Forces Windows kernel scheduler resolution from default 15.6ms down to 1.0ms.</div>
+                </div>
+              </li>
+              <li class="tech-item">
+                <div class="tech-bullet">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div class="tech-title">Zero-Trust Constant-Time Auth</div>
+                  <div class="tech-desc">Constant-time token validation, anti-brute-force rate limiting, and local TLS encryption.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="code-window">
+            <div class="code-header">
+              <div class="code-dot code-dot-red"></div>
+              <div class="code-dot code-dot-yellow"></div>
+              <div class="code-dot code-dot-green"></div>
+              <span style="color: var(--text-dim); font-size: 12px; margin-left: 8px;">core/input_driver.py</span>
+            </div>
+            <pre class="code-body"><code><span class="code-comment"># Windows 1ms High-Resolution Timer</span>
+ctypes.windll.winmm.<span class="code-func">timeBeginPeriod</span>(1)
+
+<span class="code-comment"># Per-Monitor High-DPI Awareness</span>
+ctypes.windll.shcore.<span class="code-func">SetProcessDpiAwareness</span>(2)
+
+<span class="code-keyword">def</span> <span class="code-func">win32_send_mouse</span>(flags, dx=0, dy=0):
+    inp = <span class="code-func">INPUT</span>()
+    inp.type = INPUT_MOUSE
+    inp.u.mi.dx = int(dx)
+    inp.u.mi.dy = int(dy)
+    inp.u.mi.dwFlags = int(flags)
+    ctypes.windll.user32.<span class="code-func">SendInput</span>(
+        1, ctypes.byref(inp), ctypes.sizeof(inp)
+    )</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works / Setup -->
+  <section class="section section-alt" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Quick Setup Guide</div>
+        <h2 class="section-title">Up and running in less than 60 seconds</h2>
+        <p class="section-desc">
+          No cloud accounts, no email logins, no app store downloads. Everything runs on your local Wi-Fi.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3 class="step-title">Run AirDeck on PC</h3>
+          <p class="step-desc">
+            Download and run AirDeck.exe. It automatically opens a clean tray icon and generates a secure 4-digit pairing PIN and QR code.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3 class="step-title">Scan QR Code</h3>
+          <p class="step-desc">
+            Point your mobile camera at the QR code displayed on your PC screen to open the web deck in Safari, Chrome, or Edge.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3 class="step-title">Verify 4-Digit PIN</h3>
+          <p class="step-desc">
+            Enter the 4-digit security PIN once. Your phone receives a persistent cryptographic token for instant future reconnections.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3 class="step-title">Add to Home Screen</h3>
+          <p class="step-desc">
+            Tap "Add to Home Screen" to install AirDeck as a borderless, full-screen Progressive Web App with zero browser address bars.
+          </p>
+        </div>
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight-col">AirDeck Pro</th>
+              <th>Physical Stream Deck</th>
+              <th>Generic Remote Apps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cost</td>
+              <td class="highlight-col">100% Free & Open Source</td>
+              <td>$150 - $250 Hardware</td>
+              <td>Subscription / Ad-supported</td>
+            </tr>
+            <tr>
+              <td>Mobile App Store Install</td>
+              <td class="highlight-col">No (Runs as PWA)</td>
+              <td>N/A (Physical Device)</td>
+              <td>Required (App Store / Play Store)</td>
+            </tr>
+            <tr>
+              <td>Account / Cloud Sign-in</td>
+              <td class="highlight-col">Zero Accounts (Local LAN)</td>
+              <td>Proprietary Account</td>
+              <td>Mandatory Cloud Login</td>
+            </tr>
+            <tr>
+              <td>Multi-Deck Capabilities</td>
+              <td class="highlight-col">Trackpad + Macro + Numpad + Slides</td>
+              <td>Macros Only</td>
+              <td>Fragmented Apps</td>
+            </tr>
+            <tr>
+              <td>Hardware Media Bridge</td>
+              <td class="highlight-col">Virtual Webcam + Mic + WASAPI</td>
+              <td>No</td>
+              <td>Rare / Premium Paywall</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Frequently Asked Questions</div>
+        <h2 class="section-title">Everything you need to know</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Do I need to install any mobile app from the Play Store or App Store?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            No. AirDeck Pro works entirely through standard web browser protocols (WebSockets, WebRTC, Canvas, and Service Workers). You can use Chrome, Safari, Edge, or Samsung Internet, and optionally tap "Add to Home Screen" for a full-screen app experience.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Does AirDeck work without active internet access?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Yes. AirDeck Pro communicates strictly over your local area network (LAN) or mobile hotspot. It requires zero cloud connectivity and works perfectly on flights, outdoors, or offline local networks.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Why does the browser display an SSL certificate prompt on first visit?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Modern mobile browsers strictly require HTTPS to grant microphone and camera permissions. AirDeck generates a persistent self-signed root certificate for your local IP. You can bypass the warning with one tap ("Proceed to site") or install the certificate on your phone to permanently eliminate warnings.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            How do I use my phone microphone inside Discord or Zoom?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Install the free VB-Audio Virtual Cable on your Windows PC. When you toggle the Mic button on Deck 1, AirDeck pipes the phone audio into CABLE Input. In Discord or Zoom, simply select "CABLE Output" as your input microphone.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Can I run AirDeck silently in the background on Windows startup?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Yes. AirDeck has built-in Windows System Tray integration. You can enable "Run on Windows Startup" directly inside the desktop Control Panel or via the Windows registry autostart manager.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Box -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-box">
+        <h2 class="cta-title">Ready to supercharge your Windows workflow?</h2>
+        <p class="cta-desc">
+          Download the portable Windows binary or build from source. No telemetry trackers, no subscription paywalls, no forced updates.
+        </p>
+        <div class="hero-actions" style="margin-bottom: 0;">
+          <a href="https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download AirDeck v3.0 (Windows x64)
+          </a>
+          <a href="https://github.com/BeginnerAman/AirDeck" class="btn btn-secondary btn-lg" target="_blank" rel="noopener">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <p style="color: var(--text); font-weight: 700; margin-bottom: 4px;">AirDeck Pro</p>
+        <p>Wireless Hardware Companion Bridge & Modular Controller Suite for Windows</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="https://github.com/BeginnerAman/AirDeck" target="_blank" rel="noopener">GitHub Repository</a></li>
+        <li><a href="https://github.com/BeginnerAman/AirDeck/releases" target="_blank" rel="noopener">Releases & Binaries</a></li>
+        <li><a href="https://github.com/BeginnerAman/AirDeck/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Interactive Simulator Logic -->
+  <script>
+    function switchSimDeck(deckName, btn) {
+      document.querySelectorAll('.sim-deck').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.sim-tab-item').forEach(el => el.classList.remove('active'));
+      
+      const target = document.getElementById('sim-deck-' + deckName);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    // Trackpad interactive dot
+    const pad = document.getElementById('sim-pad');
+    const dot = document.getElementById('sim-dot');
+    if (pad && dot) {
+      pad.addEventListener('mousemove', e => {
+        const rect = pad.getBoundingClientRect();
+        const x = Math.max(10, Math.min(rect.width - 10, e.clientX - rect.left));
+        const y = Math.max(10, Math.min(rect.height - 10, e.clientY - rect.top));
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+      });
+    }
+
+    function simClick(btn) {
+      dot.style.transform = 'translate(-50%, -50%) scale(1.6)';
+      setTimeout(() => {
+        dot.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 150);
+    }
+
+    // Numpad simulator logic
+    let calcVal = '0';
+    function simNumPress(val) {
+      const display = document.getElementById('sim-calc-val');
+      if (calcVal === '0' && val !== '.') calcVal = val;
+      else calcVal += val;
+      if (display) display.textContent = calcVal;
+    }
+    function simNumClear() {
+      calcVal = '0';
+      const display = document.getElementById('sim-calc-val');
+      if (display) display.textContent = calcVal;
+    }
+    function simNumCalc() {
+      try {
+        calcVal = String(eval(calcVal.replace(/[^0-9+\-*/.]/g, '')));
+      } catch(e) {
+        calcVal = 'Error';
+      }
+      const display = document.getElementById('sim-calc-val');
+      if (display) display.textContent = calcVal;
+    }
+
+    // Presenter Timer simulator
+    let timerInterval = null;
+    let timerSec = 0;
+    function simTimerToggle() {
+      const btn = document.getElementById('sim-timer-toggle');
+      const display = document.getElementById('sim-timer-val');
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        if (btn) btn.textContent = 'Resume';
+      } else {
+        if (btn) btn.textContent = 'Pause';
+        timerInterval = setInterval(() => {
+          timerSec++;
+          const m = String(Math.floor(timerSec / 60)).padStart(2, '0');
+          const s = String(timerSec % 60).padStart(2, '0');
+          if (display) display.textContent = `${m}:${s}`;
+        }, 1000);
+      }
+    }
+
+    // FAQ Accordion
+    function toggleFaq(el) {
+      const parent = el.closest('.faq-item');
+      if (parent) parent.classList.toggle('open');
+    }
+
+    // CPU telemetry mock fluctuation
+    setInterval(() => {
+      const cpu = document.getElementById('sim-cpu');
+      if (cpu) {
+        const rand = Math.floor(10 + Math.random() * 15);
+        cpu.textContent = rand + '%';
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
