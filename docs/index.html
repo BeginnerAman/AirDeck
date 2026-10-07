@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>AirDeck Pro - Wireless Hardware Companion Suite for Windows</title>
   <meta name="description" content="Turn any smartphone into an ultra-low-latency wireless trackpad, macro stream deck, numeric keypad, presentation remote, virtual webcam, and microphone for Windows PCs without installing any mobile app.">
   <meta name="keywords" content="stream deck, virtual webcam, trackpad, touchpad, remote control, pwa, windows utility, wireless controller, numpad, presentation clicker, wasapi loopback">
@@ -60,6 +60,9 @@
 
     html {
       scroll-behavior: smooth;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     body {
@@ -67,8 +70,12 @@
       color: var(--text);
       font-family: var(--font);
       line-height: 1.6;
+      width: 100%;
+      max-width: 100%;
       overflow-x: hidden;
+      position: relative;
       -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
     }
 
     .container {
@@ -553,12 +560,16 @@
 
     /* Comparison Table */
     .table-wrap {
+      display: block;
+      width: 100%;
+      max-width: 100%;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       margin-top: 48px;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       background: var(--surface-card);
+      box-sizing: border-box;
     }
 
     table {
@@ -723,13 +734,15 @@
     /* Mobile First & Responsive Design */
     @media (max-width: 768px) {
       .container {
-        padding: 0 18px;
+        padding: 0 16px;
+        max-width: 100%;
+        box-sizing: border-box;
       }
       .nav-inner {
-        height: 64px;
+        height: 62px;
       }
       .brand {
-        font-size: 18px;
+        font-size: 17px;
         gap: 10px;
       }
       .brand-logo {
@@ -739,28 +752,58 @@
       .nav-links {
         display: none;
       }
-      .nav-cta .btn-secondary {
-        display: none;
+      .nav-cta .nav-btn-download {
+        display: none !important;
       }
-      .nav-cta .btn-primary {
-        padding: 7px 14px;
-        font-size: 12px;
+      .nav-cta .nav-btn-github {
+        display: inline-flex !important;
+        padding: 7px 15px;
+        font-size: 13px;
+        background: rgba(168, 85, 247, 0.12);
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        color: #f8fafc;
+        border-radius: var(--radius-full);
+      }
+      .nav-cta .nav-btn-github:hover {
+        background: rgba(168, 85, 247, 0.22);
       }
       .hero {
-        padding: 56px 0 60px;
+        padding: 44px 0 52px;
+        overflow: hidden;
+      }
+      .hero-glow-purple {
+        top: -40px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: 240px;
+        height: 240px;
+      }
+      .hero-glow-cyan {
+        top: 60px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: 200px;
+        height: 200px;
       }
       .hero-badge-wrap {
-        padding: 5px 14px;
-        margin-bottom: 20px;
+        padding: 5px 12px;
+        margin-bottom: 18px;
+        max-width: 100%;
+      }
+      .badge-text {
+        font-size: 12px;
       }
       .hero-title {
-        font-size: 34px;
-        line-height: 1.15;
-        margin-bottom: 18px;
+        font-size: 30px;
+        line-height: 1.18;
+        margin-bottom: 16px;
+        word-break: break-word;
       }
       .hero-desc {
-        font-size: 16px;
-        margin-bottom: 28px;
+        font-size: 15px;
+        margin-bottom: 26px;
         line-height: 1.55;
       }
       .hero-actions {
@@ -837,6 +880,11 @@
       }
       .table-wrap {
         margin-top: 28px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        display: block;
       }
       th, td {
         padding: 14px 16px;
@@ -898,19 +946,19 @@
       </ul>
 
       <div class="nav-cta">
-        <a href="https://github.com/BeginnerAman/AirDeck" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
+        <a href="https://github.com/BeginnerAman/AirDeck" class="btn btn-secondary btn-sm nav-btn-github" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
           </svg>
-          GitHub
+          <span>GitHub</span>
         </a>
-        <a href="https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip" class="btn btn-primary btn-sm">
+        <a href="https://github.com/BeginnerAman/AirDeck/releases/download/v3.0.0/AirDeck-v3.0.0-windows-x64.zip" class="btn btn-primary btn-sm nav-btn-download">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          Download v3.0
+          <span>Download v3.0</span>
         </a>
       </div>
     </div>
