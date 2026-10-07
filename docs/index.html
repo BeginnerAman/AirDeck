@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AirDeck Pro - Wireless Hardware Companion Suite for Windows</title>
   <meta name="description" content="Turn any smartphone into an ultra-low-latency wireless trackpad, macro stream deck, numeric keypad, presentation remote, virtual webcam, and microphone for Windows PCs without installing any mobile app.">
   <meta name="keywords" content="stream deck, virtual webcam, trackpad, touchpad, remote control, pwa, windows utility, wireless controller, numpad, presentation clicker, wasapi loopback">
@@ -55,6 +55,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
@@ -194,7 +195,7 @@
     /* Hero Section */
     .hero {
       position: relative;
-      padding: 80px 0 72px;
+      padding: 96px 0 88px;
       overflow: hidden;
     }
 
@@ -224,7 +225,7 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
@@ -234,7 +235,7 @@
       gap: 10px;
       background: rgba(168, 85, 247, 0.1);
       border: 1px solid rgba(168, 85, 247, 0.3);
-      padding: 6px 16px;
+      padding: 6px 18px;
       border-radius: var(--radius-full);
       margin-bottom: 28px;
     }
@@ -285,7 +286,7 @@
       justify-content: center;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 40px;
+      margin-bottom: 48px;
     }
 
     .hero-subtext {
@@ -294,473 +295,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 24px;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
     .hero-subtext span {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    /* Expansive Console Interface Showcase (Replacing Mobile Frame) */
-    .deck-console-wrap {
-      margin-top: 60px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .deck-console {
-      background: #0d0e15;
+      gap: 8px;
+      background: rgba(19, 20, 31, 0.7);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 35px var(--neon-purple-glow);
-      overflow: hidden;
-    }
-
-    .console-topbar {
-      background: #12141f;
-      border-bottom: 1px solid var(--border);
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .console-brand-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .console-logo {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      object-fit: cover;
-    }
-
-    .console-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: var(--success);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: var(--radius-full);
-    }
-
-    .console-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--success);
-      border-radius: 50%;
-      box-shadow: 0 0 6px var(--success);
-    }
-
-    .console-tabs {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #090a10;
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid #1a1e2e;
-    }
-
-    .console-tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      font-size: 13px;
-      font-weight: 600;
       padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .console-tab-btn svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-    }
-
-    .console-tab-btn:hover {
-      color: var(--text);
-    }
-
-    .console-tab-btn.active {
-      background: #1a1c2b;
-      color: #d8b4fe;
-      border: 1px solid rgba(168, 85, 247, 0.35);
-      box-shadow: 0 2px 8px var(--neon-purple-glow);
-    }
-
-    .console-body {
-      padding: 24px;
-      min-height: 420px;
-      background: #0a0b11;
-    }
-
-    .deck-panel {
-      display: none;
-    }
-
-    .deck-panel.active {
-      display: block;
-    }
-
-    /* Tab 1: Trackpad & Quick Shortcuts */
-    .trackpad-layout {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-    }
-
-    .trackpad-surface {
-      background: #11131c;
-      border: 1px dashed #262c44;
-      border-radius: 16px;
-      height: 360px;
-      position: relative;
-      cursor: crosshair;
-      user-select: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .trackpad-hint {
-      color: var(--text-dim);
-      font-size: 14px;
-      font-weight: 500;
-      pointer-events: none;
-    }
-
-    .trackpad-cursor-dot {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      background: var(--neon-purple);
-      border-radius: 50%;
-      box-shadow: 0 0 16px var(--neon-purple), 0 0 8px var(--neon-cyan);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      transition: transform 0.05s ease-out;
-    }
-
-    .trackpad-right-col {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .action-button-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .action-btn {
-      background: #141724;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 12px;
-      border-radius: 10px;
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
       font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.15s ease;
-    }
-
-    .action-btn:hover {
-      background: #1e2235;
-      border-color: var(--neon-purple);
-      color: #fff;
-    }
-
-    .action-btn:active {
-      transform: scale(0.98);
-    }
-
-    .media-cluster-card {
-      background: #11131d;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .cluster-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .media-btn-row {
-      display: flex;
-      gap: 8px;
-      justify-content: space-between;
-    }
-
-    .media-circle-btn {
-      flex: 1;
-      height: 42px;
-      background: #171b2a;
-      border: 1px solid #282f48;
-      border-radius: 8px;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .media-circle-btn:hover {
-      background: #20263b;
-      border-color: var(--neon-cyan);
-    }
-
-    .media-circle-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-    }
-
-    /* Tab 2: Stream Deck Grid */
-    .streamdeck-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .telemetry-dashboard {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .telemetry-card {
-      background: #12141f;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .telem-info-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    .telem-info-val {
-      font-size: 22px;
-      font-weight: 800;
-      font-family: var(--font-mono);
-      color: var(--text);
-    }
-
-    .telem-bar-track {
-      width: 80px;
-      height: 6px;
-      background: #1f2438;
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .telem-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.4s ease;
-    }
-
-    .macro-tile-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .macro-tile {
-      background: #131522;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .macro-tile:hover {
-      background: #1c2033;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .macro-tile svg {
-      width: 26px;
-      height: 26px;
-    }
-
-    .tile-purple:hover { border-color: var(--neon-purple); box-shadow: 0 6px 20px var(--neon-purple-glow); }
-    .tile-cyan:hover { border-color: var(--neon-cyan); box-shadow: 0 6px 20px var(--neon-cyan-glow); }
-    .tile-blue:hover { border-color: var(--neon-blue); }
-
-    /* Tab 3: Numpad */
-    .numpad-layout {
-      max-width: 440px;
-      margin: 0 auto;
-    }
-
-    .numpad-screen {
-      background: #11131c;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      text-align: right;
-      font-family: var(--font-mono);
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--neon-cyan);
-      margin-bottom: 16px;
-      min-height: 64px;
-    }
-
-    .numpad-keys-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .numkey {
-      background: #141724;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 600;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .numkey:hover {
-      background: #1e2235;
-      border-color: var(--neon-purple);
-    }
-
-    .numkey:active {
-      transform: scale(0.96);
-      background: var(--neon-purple);
-    }
-
-    .numkey-op {
-      background: #1b1e2e;
-      color: #c084fc;
-    }
-
-    /* Tab 4: Presenter */
-    .presenter-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .presenter-timer-box {
-      background: #12141f;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px 24px;
-      text-align: center;
-    }
-
-    .timer-caption {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-dim);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .timer-clock {
-      font-family: var(--font-mono);
-      font-size: 48px;
-      font-weight: 800;
-      color: var(--text);
-      margin: 12px 0 20px;
-    }
-
-    .presenter-controls-col {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .slide-clicker-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .big-slide-btn {
-      height: 110px;
-      background: #141724;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 700;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .big-slide-btn:hover {
-      background: #1d2133;
-      border-color: var(--neon-purple);
-    }
-
-    .big-slide-btn:active {
-      background: var(--neon-purple);
     }
 
     /* Section Styles */
@@ -954,6 +502,7 @@
       line-height: 1.7;
       color: #cbd5e1;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .code-keyword { color: #f43f5e; }
@@ -1005,6 +554,7 @@
     /* Comparison Table */
     .table-wrap {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin-top: 48px;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
@@ -1013,6 +563,7 @@
 
     table {
       width: 100%;
+      min-width: 620px;
       border-collapse: collapse;
       text-align: left;
       font-size: 15px;
@@ -1079,6 +630,8 @@
       height: 20px;
       stroke: var(--text-muted);
       transition: transform 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 12px;
     }
 
     .faq-item.open .faq-icon {
@@ -1167,31 +720,161 @@
       color: var(--text);
     }
 
+    /* Mobile First & Responsive Design */
     @media (max-width: 768px) {
-      .hero-title {
-        font-size: 42px;
+      .container {
+        padding: 0 18px;
       }
-      .section-title {
-        font-size: 32px;
+      .nav-inner {
+        height: 64px;
+      }
+      .brand {
+        font-size: 18px;
+        gap: 10px;
+      }
+      .brand-logo {
+        width: 32px;
+        height: 32px;
       }
       .nav-links {
         display: none;
       }
-      .trackpad-layout {
-        grid-template-columns: 1fr;
+      .nav-cta .btn-secondary {
+        display: none;
       }
-      .macro-tile-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .nav-cta .btn-primary {
+        padding: 7px 14px;
+        font-size: 12px;
       }
-      .presenter-layout {
+      .hero {
+        padding: 56px 0 60px;
+      }
+      .hero-badge-wrap {
+        padding: 5px 14px;
+        margin-bottom: 20px;
+      }
+      .hero-title {
+        font-size: 34px;
+        line-height: 1.15;
+        margin-bottom: 18px;
+      }
+      .hero-desc {
+        font-size: 16px;
+        margin-bottom: 28px;
+        line-height: 1.55;
+      }
+      .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+      .hero-actions .btn {
+        width: 100%;
+        padding: 13px 20px;
+        font-size: 15px;
+      }
+      .hero-subtext {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+        align-items: stretch;
+      }
+      .hero-subtext span {
+        width: 100%;
+        font-size: 13px;
+        justify-content: flex-start;
+        padding: 8px 14px;
+      }
+      .section {
+        padding: 68px 0;
+      }
+      .section-header {
+        margin-bottom: 40px;
+      }
+      .section-title {
+        font-size: 28px;
+      }
+      .section-desc {
+        font-size: 15px;
+      }
+      .grid-4, .grid-3 {
         grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .card {
+        padding: 24px 20px;
+      }
+      .card-icon {
+        width: 44px;
+        height: 44px;
+        margin-bottom: 16px;
+      }
+      .card-title {
+        font-size: 18px;
+      }
+      .card-desc {
+        font-size: 14px;
+      }
+      .tech-box {
+        padding: 24px 18px;
+        margin-top: 36px;
       }
       .tech-grid {
         grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .code-body {
+        padding: 16px;
+        font-size: 11px;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .step-card {
+        padding: 22px 18px;
+      }
+      .table-wrap {
+        margin-top: 28px;
+      }
+      th, td {
+        padding: 14px 16px;
+        font-size: 13px;
+      }
+      .faq-question {
+        padding: 16px 18px;
+        font-size: 15px;
+      }
+      .faq-answer {
+        padding: 0 18px 16px;
+        font-size: 14px;
+      }
+      .cta-box {
+        padding: 40px 20px;
+        border-radius: 20px;
+      }
+      .cta-title {
+        font-size: 26px;
+      }
+      .cta-desc {
+        font-size: 15px;
+      }
+      .footer {
+        padding: 36px 0;
       }
       .footer-inner {
         flex-direction: column;
+        gap: 20px;
         text-align: center;
+      }
+      .footer-brand {
+        flex-direction: column;
+      }
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
       }
     }
   </style>
@@ -1207,9 +890,9 @@
       </a>
 
       <ul class="nav-links">
-        <li><a href="#console">Interactive Deck</a></li>
-        <li><a href="#features">Features</a></li>
+        <li><a href="#features">Decks</a></li>
         <li><a href="#media-bridge">Media Bridge</a></li>
+        <li><a href="#architecture">Architecture</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
@@ -1233,7 +916,7 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- Hero Section (Clean, Focused, No Mockup Boxes) -->
   <header class="hero">
     <div class="hero-glow-purple"></div>
     <div class="hero-glow-cyan"></div>
@@ -1287,234 +970,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
           100% Free & Open Source
         </span>
-      </div>
-
-      <!-- Expansive Interactive Deck Console -->
-      <div class="deck-console-wrap" id="console">
-        <div class="deck-console">
-          
-          <div class="console-topbar">
-            <div class="console-brand-group">
-              <img src="airdeck_logo.png" alt="AirDeck Icon" class="console-logo">
-              <span style="font-weight: 700; font-size: 14px;">AirDeck Hardware Console</span>
-              <div class="console-status-pill">
-                <span class="console-dot"></span>
-                Active LAN Session (0ms Latency)
-              </div>
-            </div>
-
-            <!-- Tab Switcher -->
-            <div class="console-tabs">
-              <button class="console-tab-btn active" onclick="switchConsoleTab('trackpad', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="4"/><line x1="12" y1="6" x2="12" y2="10"/></svg>
-                Trackpad & Shortcuts
-              </button>
-              <button class="console-tab-btn" onclick="switchConsoleTab('streamdeck', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                Stream Deck & Telemetry
-              </button>
-              <button class="console-tab-btn" onclick="switchConsoleTab('numpad', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="8.01" y2="8"/><line x1="12" y1="8" x2="12.01" y2="8"/><line x1="16" y1="8" x2="16.01" y2="8"/></svg>
-                Tactile Numpad
-              </button>
-              <button class="console-tab-btn" onclick="switchConsoleTab('presenter', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>
-                Presentation Remote
-              </button>
-            </div>
-          </div>
-
-          <div class="console-body">
-            
-            <!-- Panel 1: Trackpad & Quick Shortcuts -->
-            <div class="deck-panel active" id="panel-trackpad">
-              <div class="trackpad-layout">
-                <div class="trackpad-surface" id="pad-surface">
-                  <span class="trackpad-hint">Interactive Touchpad Surface (Move cursor freely)</span>
-                  <div class="trackpad-cursor-dot" id="cursor-dot" style="left: 50%; top: 50%;"></div>
-                </div>
-
-                <div class="trackpad-right-col">
-                  <div class="action-button-grid">
-                    <button class="action-btn" onclick="simulateAction('Desktop (Win+D)')">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                      Desktop
-                    </button>
-                    <button class="action-btn" onclick="simulateAction('Alt+Tab App Switch')">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
-                      Alt+Tab
-                    </button>
-                    <button class="action-btn" onclick="simulateAction('Screen Snip (Win+Shift+S)')">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/></svg>
-                      Snip
-                    </button>
-                    <button class="action-btn" onclick="simulateAction('Close Tab (Ctrl+W)')">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                      Close Tab
-                    </button>
-                  </div>
-
-                  <div class="action-button-grid">
-                    <button class="action-btn" onclick="pulseCursor()">Left Click</button>
-                    <button class="action-btn" onclick="pulseCursor()">Right Click</button>
-                  </div>
-
-                  <div class="media-cluster-card">
-                    <span class="cluster-title">Tactile Media Cluster</span>
-                    <div class="media-btn-row">
-                      <button class="media-circle-btn" onclick="simulateAction('Seek Back 10s')" title="Seek Back 10s">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
-                      </button>
-                      <button class="media-circle-btn" onclick="simulateAction('Play / Pause')" title="Play / Pause">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="5 3 14 10 5 17 5 3"/><line x1="17" y1="4" x2="17" y2="16"/><line x1="21" y1="4" x2="21" y2="16"/></svg>
-                      </button>
-                      <button class="media-circle-btn" onclick="simulateAction('Seek Forward 10s')" title="Seek Forward 10s">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-                      </button>
-                      <button class="media-circle-btn" onclick="simulateAction('Mute Audio')" title="Mute Audio">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 2: Stream Deck & Telemetry -->
-            <div class="deck-panel" id="panel-streamdeck">
-              <div class="streamdeck-layout">
-                <div class="telemetry-dashboard">
-                  <div class="telemetry-card">
-                    <div>
-                      <div class="telem-info-label">CPU Load</div>
-                      <div class="telem-info-val" id="live-cpu-val">12%</div>
-                      <div class="telem-bar-track"><div class="telem-bar-fill" id="live-cpu-bar" style="width: 12%; background: var(--neon-purple);"></div></div>
-                    </div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--neon-purple)" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/></svg>
-                  </div>
-
-                  <div class="telemetry-card">
-                    <div>
-                      <div class="telem-info-label">RAM Usage</div>
-                      <div class="telem-info-val">38%</div>
-                      <div class="telem-bar-track"><div class="telem-bar-fill" style="width: 38%; background: var(--neon-cyan);"></div></div>
-                    </div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" stroke-width="2"><path d="M6 19v-3M10 19v-3M14 19v-3M18 19v-3M6 5v3M10 5v3M14 5v3M18 5v3M2 8h20v8H2z"/></svg>
-                  </div>
-
-                  <div class="telemetry-card">
-                    <div>
-                      <div class="telem-info-label">Battery Level</div>
-                      <div class="telem-info-val">94% AC</div>
-                      <div class="telem-bar-track"><div class="telem-bar-fill" style="width: 94%; background: var(--success);"></div></div>
-                    </div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="11" x2="23" y2="13"/></svg>
-                  </div>
-                </div>
-
-                <div class="macro-tile-grid">
-                  <button class="macro-tile tile-purple" onclick="simulateAction('Launch Task Manager')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-purple)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                    Task Manager
-                  </button>
-                  <button class="macro-tile tile-cyan" onclick="simulateAction('Open File Explorer')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    File Explorer
-                  </button>
-                  <button class="macro-tile tile-blue" onclick="simulateAction('Open Terminal')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-blue)" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-                    Command / CMD
-                  </button>
-                  <button class="macro-tile tile-purple" onclick="simulateAction('Spotify Launcher')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-purple)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12a8 8 0 0 1 8 0M9 15a6 6 0 0 1 6 0M7 9a10 10 0 0 1 10 0"/></svg>
-                    Spotify Music
-                  </button>
-                  <button class="macro-tile tile-cyan" onclick="simulateAction('Mute Discord Microphone')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/></svg>
-                    Discord Mute
-                  </button>
-                  <button class="macro-tile tile-blue" onclick="simulateAction('Open Calculator')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-blue)" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>
-                    Calculator
-                  </button>
-                  <button class="macro-tile tile-purple" onclick="simulateAction('Notepad')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-purple)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    Quick Notepad
-                  </button>
-                  <button class="macro-tile tile-cyan" onclick="simulateAction('Lock PC (Win+L)')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    Lock Computer
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 3: Tactile Numpad -->
-            <div class="deck-panel" id="panel-numpad">
-              <div class="numpad-layout">
-                <div class="numpad-screen" id="numpad-screen-val">0</div>
-                <div class="numpad-keys-grid">
-                  <button class="numkey numkey-op" onclick="numClear()">ESC</button>
-                  <button class="numkey numkey-op" onclick="numPress('/')">/</button>
-                  <button class="numkey numkey-op" onclick="numPress('*')">*</button>
-                  <button class="numkey numkey-op" onclick="numBackspace()">⌫</button>
-
-                  <button class="numkey" onclick="numPress('7')">7</button>
-                  <button class="numkey" onclick="numPress('8')">8</button>
-                  <button class="numkey" onclick="numPress('9')">9</button>
-                  <button class="numkey numkey-op" onclick="numPress('-')">-</button>
-
-                  <button class="numkey" onclick="numPress('4')">4</button>
-                  <button class="numkey" onclick="numPress('5')">5</button>
-                  <button class="numkey" onclick="numPress('6')">6</button>
-                  <button class="numkey numkey-op" onclick="numPress('+')">+</button>
-
-                  <button class="numkey" onclick="numPress('1')">1</button>
-                  <button class="numkey" onclick="numPress('2')">2</button>
-                  <button class="numkey" onclick="numPress('3')">3</button>
-                  <button class="numkey numkey-op" style="background: var(--neon-purple); color: #fff;" onclick="numCalc()">=</button>
-
-                  <button class="numkey" style="grid-column: span 2;" onclick="numPress('0')">0</button>
-                  <button class="numkey" onclick="numPress('.')">.</button>
-                  <button class="numkey numkey-op" onclick="numCalc()">ENTER</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 4: Presentation Remote -->
-            <div class="deck-panel" id="panel-presenter">
-              <div class="presenter-layout">
-                <div class="presenter-timer-box">
-                  <div class="timer-caption">Elapsed Presentation Time</div>
-                  <div class="timer-clock" id="live-timer-clock">00:00</div>
-                  <button class="btn btn-primary btn-sm" id="timer-toggle-btn" onclick="toggleTimer()">Start Stopwatch</button>
-                  <button class="btn btn-secondary btn-sm" onclick="resetTimer()" style="margin-left: 8px;">Reset</button>
-                </div>
-
-                <div class="presenter-controls-col">
-                  <div class="slide-clicker-grid">
-                    <button class="big-slide-btn" onclick="simulateAction('Previous Slide (PageUp)')">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                      PREV SLIDE
-                    </button>
-                    <button class="big-slide-btn" onclick="simulateAction('Next Slide (PageDown)')">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                      NEXT SLIDE
-                    </button>
-                  </div>
-
-                  <div class="action-button-grid">
-                    <button class="action-btn" onclick="simulateAction('Start Slideshow (F5)')">Start F5</button>
-                    <button class="action-btn" onclick="simulateAction('End Slideshow (Esc)')">End Esc</button>
-                    <button class="action-btn" onclick="simulateAction('Blank Screen (B)')">Black (B)</button>
-                    <button class="action-btn" onclick="simulateAction('White Screen (W)')">White (W)</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1648,7 +1103,7 @@
       </div>
 
       <!-- Architecture Deep Dive Box -->
-      <div class="tech-box">
+      <div class="tech-box" id="architecture">
         <div class="tech-grid">
           <div>
             <h3 style="font-size: 26px; font-weight: 800; margin-bottom: 16px;">Engineered for Sub-Millisecond Input Latency</h3>
@@ -1912,120 +1367,13 @@ ctypes.windll.shcore.<span class="code-func">SetProcessDpiAwareness</span>(2)
     </div>
   </footer>
 
-  <!-- Interactive Console Logic -->
+  <!-- Interactive Logic -->
   <script>
-    function switchConsoleTab(tabName, btn) {
-      document.querySelectorAll('.deck-panel').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.console-tab-btn').forEach(el => el.classList.remove('active'));
-      
-      const target = document.getElementById('panel-' + tabName);
-      if (target) target.classList.add('active');
-      if (btn) btn.classList.add('active');
-    }
-
-    // Trackpad interactive dot
-    const pad = document.getElementById('pad-surface');
-    const dot = document.getElementById('cursor-dot');
-    if (pad && dot) {
-      pad.addEventListener('mousemove', e => {
-        const rect = pad.getBoundingClientRect();
-        const x = Math.max(12, Math.min(rect.width - 12, e.clientX - rect.left));
-        const y = Math.max(12, Math.min(rect.height - 12, e.clientY - rect.top));
-        dot.style.left = x + 'px';
-        dot.style.top = y + 'px';
-      });
-    }
-
-    function pulseCursor() {
-      if (dot) {
-        dot.style.transform = 'translate(-50%, -50%) scale(1.8)';
-        setTimeout(() => {
-          dot.style.transform = 'translate(-50%, -50%) scale(1)';
-        }, 150);
-      }
-    }
-
-    function simulateAction(name) {
-      pulseCursor();
-      console.log('Simulated Action:', name);
-    }
-
-    // Numpad logic
-    let calcVal = '0';
-    function numPress(val) {
-      const display = document.getElementById('numpad-screen-val');
-      if (calcVal === '0' && val !== '.') calcVal = val;
-      else calcVal += val;
-      if (display) display.textContent = calcVal;
-    }
-    function numClear() {
-      calcVal = '0';
-      const display = document.getElementById('numpad-screen-val');
-      if (display) display.textContent = calcVal;
-    }
-    function numBackspace() {
-      calcVal = calcVal.length > 1 ? calcVal.slice(0, -1) : '0';
-      const display = document.getElementById('numpad-screen-val');
-      if (display) display.textContent = calcVal;
-    }
-    function numCalc() {
-      try {
-        calcVal = String(eval(calcVal.replace(/[^0-9+\-*/.]/g, '')));
-      } catch(e) {
-        calcVal = 'Error';
-      }
-      const display = document.getElementById('numpad-screen-val');
-      if (display) display.textContent = calcVal;
-    }
-
-    // Presenter Timer logic
-    let timerInterval = null;
-    let timerSec = 0;
-    function toggleTimer() {
-      const btn = document.getElementById('timer-toggle-btn');
-      const display = document.getElementById('live-timer-clock');
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        if (btn) btn.textContent = 'Resume Timer';
-      } else {
-        if (btn) btn.textContent = 'Pause Timer';
-        timerInterval = setInterval(() => {
-          timerSec++;
-          const m = String(Math.floor(timerSec / 60)).padStart(2, '0');
-          const s = String(timerSec % 60).padStart(2, '0');
-          if (display) display.textContent = `${m}:${s}`;
-        }, 1000);
-      }
-    }
-    function resetTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-      timerSec = 0;
-      const display = document.getElementById('live-timer-clock');
-      const btn = document.getElementById('timer-toggle-btn');
-      if (display) display.textContent = '00:00';
-      if (btn) btn.textContent = 'Start Stopwatch';
-    }
-
     // FAQ Accordion
     function toggleFaq(el) {
       const parent = el.closest('.faq-item');
       if (parent) parent.classList.toggle('open');
     }
-
-    // CPU telemetry mock fluctuation
-    setInterval(() => {
-      const cpuVal = document.getElementById('live-cpu-val');
-      const cpuBar = document.getElementById('live-cpu-bar');
-      if (cpuVal && cpuBar) {
-        const rand = Math.floor(10 + Math.random() * 18);
-        cpuVal.textContent = rand + '%';
-        cpuBar.style.width = rand + '%';
-      }
-    }, 2500);
   </script>
 </body>
 </html>
